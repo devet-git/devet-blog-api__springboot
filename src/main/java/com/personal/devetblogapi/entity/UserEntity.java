@@ -1,6 +1,7 @@
 package com.personal.devetblogapi.entity;
 
 import com.personal.devetblogapi.constant.UserRole;
+import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -8,6 +9,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +22,8 @@ public class UserEntity implements UserDetails {
   @Id private String Id;
   private String username;
 
+  @Indexed(unique = true)
+  @NotBlank
   private String email;
 
   private String password;
@@ -29,13 +33,12 @@ public class UserEntity implements UserDetails {
   private Date create_date;
   private Date update_date;
   //  @DBRef private List<TokenEntity> tokens;
-  //
-  //  private List<EmployeeEntity> employees;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
     list.add(new SimpleGrantedAuthority(role.name()));
+    list.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
 
     return list;
   }
