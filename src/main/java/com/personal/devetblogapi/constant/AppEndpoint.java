@@ -10,7 +10,8 @@ public final class AppEndpoint {
     "/api/v1/files/pdf/**",
     "/api/v1/files/data/**",
     "/swagger-ui/**",
-    "/v3/api-docs/**"
+    "/v3/api-docs/**",
+    "/actuator/**"
   };
 
   public static final class Auth {

@@ -6,7 +6,6 @@ import com.personal.devetblogapi.entity.UserEntity;
 import com.personal.devetblogapi.exception.CustomException;
 import com.personal.devetblogapi.model.ArticleDto;
 import com.personal.devetblogapi.repo.ArticleRepo;
-import com.personal.devetblogapi.repo.UserRepo;
 import com.personal.devetblogapi.util.EntityUtil;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ArticleService {
   @Autowired private ArticleRepo articleRepo;
-  @Autowired private UserRepo userRepo;
   @Autowired private AuthService authService;
 
   @Cacheable(value = "articles")
