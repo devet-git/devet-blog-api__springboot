@@ -4,7 +4,7 @@ public final class AppEndpoint {
 
   public static final String ROOT_V1 = "/api/v1/";
 
-  public static final String[] WHITE_LIST = {
+  public static final String[] PUBLIC_LIST = {
     "/api/v1/auth/**",
     "/api/v1/files/images/**",
     "/api/v1/files/pdf/**",
@@ -13,6 +13,7 @@ public final class AppEndpoint {
     "/v3/api-docs/**",
     "/actuator/**"
   };
+  public static final String[] ADMIN_LIST = {"/swagger-ui/**", "/v3/api-docs/**", "/actuator/**"};
 
   public static final class Auth {
     public static final String BASE = ROOT_V1 + "auth/";
@@ -26,6 +27,16 @@ public final class AppEndpoint {
 
     public static final String listAll = BASE;
     public static final String LIST_ALL_BY_USER_ID = "/users/{id}/" + BASE;
+    public static final String GET_BY_ID = BASE + "/{id}";
+    public static final String CREATE = BASE;
+    public static final String UPDATE = BASE + "/{id}";
+    public static final String DELETE = BASE + "/{id}";
+  }
+
+  public static final class User {
+    private static final String BASE = "users";
+
+    public static final String listAll = BASE;
     public static final String GET_BY_ID = BASE + "/{id}";
     public static final String CREATE = BASE;
     public static final String UPDATE = BASE + "/{id}";

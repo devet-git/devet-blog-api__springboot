@@ -8,6 +8,7 @@ import com.personal.devetblogapi.exception.CustomException;
 import com.personal.devetblogapi.model.AuthDto;
 import com.personal.devetblogapi.repo.TokenRepo;
 import com.personal.devetblogapi.repo.UserRepo;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,7 @@ public class AuthService {
             .email(reqEmail)
             .password(passwordEncoder.encode(reqPw))
             .role(UserRole.USER)
+            .create_date(new Date())
             .build();
 
     UserEntity savedUser = userRepo.save(user);

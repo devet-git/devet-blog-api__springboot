@@ -29,7 +29,7 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
         (requests) ->
             requests
-                .requestMatchers(AppEndpoint.WHITE_LIST)
+                .requestMatchers(AppEndpoint.PUBLIC_LIST)
                 .permitAll()
                 .anyRequest()
                 .authenticated());
@@ -50,6 +50,6 @@ public class SecurityConfig {
 
   @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
-    return (web) -> web.ignoring().requestMatchers(AppEndpoint.WHITE_LIST);
+    return (web) -> web.ignoring().requestMatchers(AppEndpoint.PUBLIC_LIST);
   }
 }

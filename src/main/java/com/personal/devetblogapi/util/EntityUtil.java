@@ -5,10 +5,10 @@ import java.util.Map;
 import org.springframework.util.ReflectionUtils;
 
 public final class EntityUtil {
-  public static <T> void partialUpdate(Class<?> clazz, Object entity, Map<String, T> fields) {
+  public static <T> void partialUpdate(Object entity, Map<String, T> fields) {
     fields.forEach(
         (key, value) -> {
-          Field field = ReflectionUtils.findField(clazz, key);
+          Field field = ReflectionUtils.findField(entity.getClass(), key);
           assert field != null;
           field.setAccessible(true);
           ReflectionUtils.setField(field, entity, value);
