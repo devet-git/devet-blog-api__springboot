@@ -19,12 +19,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @Builder
 public class UserEntity implements UserDetails {
-  @Id private String Id;
+  @Id private String id;
   private String username;
 
   @Indexed(unique = true)
   @NotBlank
   private String email;
+
+  private String fullName;
 
   private String password;
 

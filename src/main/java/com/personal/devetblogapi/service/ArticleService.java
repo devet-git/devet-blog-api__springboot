@@ -92,7 +92,7 @@ public class ArticleService {
 
   public <T> void updateById(String articleId, Map<String, T> fields) {
     ArticleEntity updatedPost = getById(articleId);
-    EntityUtil.partialUpdate(ArticleEntity.class, updatedPost, fields);
+    EntityUtil.partialUpdate(updatedPost, fields);
     articleRepo.save(updatedPost);
   }
 

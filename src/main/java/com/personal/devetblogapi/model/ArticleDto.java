@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Data
@@ -24,8 +26,8 @@ public final class ArticleDto {
     private String content;
   }
 
-  @Data
-  @Builder
+  @Getter
+  @Setter
   public static final class Response {
     private String title;
     private ArrayList<String> authors;
