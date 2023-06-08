@@ -1,7 +1,7 @@
 package com.personal.devetblogapi.config;
 
 import com.personal.devetblogapi.constant.MessageConst;
-import com.personal.devetblogapi.model.DataResponseDto;
+import com.personal.devetblogapi.model.ResponseDto;
 import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -46,9 +47,9 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleMethodArgumentNotValid(
       MethodArgumentNotValidException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
 
     Map<String, Object> responseBody = new HashMap<>();
     List<Object> errors =
@@ -57,20 +58,22 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
             .collect(Collectors.toList());
 
     responseBody.put("timestamp", new Date());
-    responseBody.put("message", "Bad request");
     responseBody.put("statusCode", HttpStatus.BAD_REQUEST.value());
+    responseBody.put("message", HttpStatus.BAD_REQUEST.name());
     responseBody.put("errors", errors);
-    //    LoggerManager.error(errors.toString());
 
+    //    return ResponseEntity.badRequest()
+    //        .body(ResponseDto.error(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.name(),
+    // errors));
     return ResponseEntity.badRequest().body(responseBody);
   }
 
   @Override
   protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
-      HttpRequestMethodNotSupportedException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull HttpRequestMethodNotSupportedException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
 
     //    LoggerManager.warn(String.format("%s: %s", ex.getMessage(),
     // request.getDescription(true)));
@@ -80,24 +83,22 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
       HttpMessageNotReadableException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
     return ResponseEntity.badRequest()
         .body(
-            DataResponseDto.error(
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.name(),
-                ex.getLocalizedMessage()));
+            ResponseDto.error(
+                HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.name(), ex.getLocalizedMessage()));
   }
 
   @Override
   protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
-      HttpMediaTypeNotSupportedException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull HttpMediaTypeNotSupportedException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     return this.handleExceptionInternal(ex, null, headers, status, request);
@@ -105,10 +106,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(
-      HttpMediaTypeNotAcceptableException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull HttpMediaTypeNotAcceptableException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     return this.handleExceptionInternal(ex, null, headers, status, request);
@@ -116,20 +117,20 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleMissingPathVariable(
-      MissingPathVariableException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull MissingPathVariableException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
     return this.handleExceptionInternal(ex, null, headers, status, request);
   }
 
   @Override
   protected ResponseEntity<Object> handleMissingServletRequestParameter(
-      MissingServletRequestParameterException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull MissingServletRequestParameterException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     return this.handleExceptionInternal(ex, null, headers, status, request);
@@ -137,10 +138,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotWritable(
-      HttpMessageNotWritableException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull HttpMessageNotWritableException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     ProblemDetail body =
         this.createProblemDetail(ex, status, "Failed to write request", null, null, request);
     //    LoggerManager.warn(ex.getMessage());
@@ -150,10 +151,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleMissingServletRequestPart(
-      MissingServletRequestPartException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull MissingServletRequestPartException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     return this.handleExceptionInternal(ex, null, headers, status, request);
@@ -161,10 +162,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleServletRequestBindingException(
-      ServletRequestBindingException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull ServletRequestBindingException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     return this.handleExceptionInternal(ex, null, headers, status, request);
@@ -172,7 +173,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleNoHandlerFoundException(
-      NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+      @NonNull NoHandlerFoundException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     return this.handleExceptionInternal(ex, null, headers, status, request);
@@ -180,10 +184,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleAsyncRequestTimeoutException(
-      AsyncRequestTimeoutException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull AsyncRequestTimeoutException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     return this.handleExceptionInternal(ex, null, headers, status, request);
@@ -191,7 +195,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleErrorResponseException(
-      ErrorResponseException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+      @NonNull ErrorResponseException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     return this.handleExceptionInternal(ex, null, headers, status, request);
@@ -200,9 +207,9 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
   @Override
   protected ResponseEntity<Object> handleConversionNotSupported(
       ConversionNotSupportedException ex,
-      HttpHeaders headers,
-      HttpStatusCode status,
-      WebRequest request) {
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     Object[] args = new Object[] {ex.getPropertyName(), ex.getValue()};
@@ -213,7 +220,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleTypeMismatch(
-      TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+      TypeMismatchException ex,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     //    LoggerManager.warn(ex.getMessage());
 
     Object[] args = new Object[] {ex.getPropertyName(), ex.getValue()};
@@ -231,8 +241,8 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     return ResponseEntity.badRequest()
         .body(
-            DataResponseDto.error(
-                HttpStatus.BAD_REQUEST.value(),
+            ResponseDto.error(
+                HttpStatus.BAD_REQUEST,
                 HttpStatus.BAD_REQUEST.name(),
                 MessageConst.notExist("File ")));
   }
@@ -243,8 +253,8 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     return ResponseEntity.badRequest()
         .body(
-            DataResponseDto.error(
-                HttpStatus.BAD_REQUEST.value(),
+            ResponseDto.error(
+                HttpStatus.BAD_REQUEST,
                 HttpStatus.BAD_REQUEST.name(),
                 MessageConst.accessDenied("resource")));
   }
@@ -255,8 +265,8 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     return ResponseEntity.badRequest()
         .body(
-            DataResponseDto.error(
-                HttpStatus.BAD_REQUEST.value(),
+            ResponseDto.error(
+                HttpStatus.BAD_REQUEST,
                 HttpStatus.BAD_REQUEST.name(),
                 MessageConst.notExist("File")));
   }
@@ -265,18 +275,11 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleAccessDeniedException(
       AccessDeniedException ex, WebRequest request) {
     //    LoggerManager.error(ex.getMessage());
-    if (request.getUserPrincipal() == null) {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN)
-          .body(
-              DataResponseDto.error(
-                  HttpStatus.FORBIDDEN.value(),
-                  HttpStatus.FORBIDDEN.name(),
-                  MessageConst.NOT_AUTHENTICATED));
-    }
+
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
         .body(
-            DataResponseDto.error(
-                HttpStatus.UNAUTHORIZED.value(),
+            ResponseDto.error(
+                HttpStatus.UNAUTHORIZED,
                 HttpStatus.UNAUTHORIZED.name(),
                 MessageConst.accessDenied("resource")));
   }
@@ -286,8 +289,8 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
     //    LoggerManager.error(ex.getMessage());
     return ResponseEntity.badRequest()
         .body(
-            DataResponseDto.error(
-                HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
+            ResponseDto.error(
+                HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.name(), ex.getMessage()));
   }
 
   @ExceptionHandler({HttpServerErrorException.class})
@@ -296,8 +299,8 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     return ResponseEntity.internalServerError()
         .body(
-            DataResponseDto.error(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            ResponseDto.error(
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 HttpStatus.INTERNAL_SERVER_ERROR.name(),
                 MessageConst.SERVER_ERROR));
   }

@@ -1,15 +1,13 @@
 package com.personal.devetblogapi.controller;
 
+import com.personal.devetblogapi.annotation.SwaggerFormat;
 import com.personal.devetblogapi.constant.AppEndpoint;
 import com.personal.devetblogapi.constant.CrossOriginUrls;
 import com.personal.devetblogapi.constant.MessageConst;
 import com.personal.devetblogapi.model.AuthDto;
-import com.personal.devetblogapi.model.DataResponseDto;
+import com.personal.devetblogapi.model.EntityResponseDto;
 import com.personal.devetblogapi.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,63 +29,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
   @Autowired private AuthService authService;
 
-  @Operation(
-      summary = "Register",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Successful",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = DataResponseDto.class))
-            }),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Bad request",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = DataResponseDto.class))
-            }),
-      })
+  @SwaggerFormat(summary = "Register")
   @PostMapping(value = {AppEndpoint.Auth.REGISTER})
   public ResponseEntity<?> register(@Valid @RequestBody AuthDto.Register req) {
     var response = authService.register(req);
-    return ResponseEntity.ok(
-        DataResponseDto.success(HttpStatus.OK.value(), MessageConst.SUCCESS, response));
+    return EntityResponseDto.success(HttpStatus.OK, MessageConst.SUCCESS, response);
   }
 
-  @Operation(
+  @SwaggerFormat(
       summary = "Login",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Successful",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = DataResponseDto.class))
-            }),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Bad request",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = DataResponseDto.class))
-            }),
-      })
+      security = {})
   @PostMapping(value = {AppEndpoint.Auth.LOGIN})
   public ResponseEntity<?> login(@Valid @RequestBody AuthDto.Login req) {
     var response = authService.login(req);
-    return ResponseEntity.ok(
-        DataResponseDto.success(HttpStatus.OK.value(), MessageConst.SUCCESS, response));
+    return EntityResponseDto.success(HttpStatus.OK, MessageConst.SUCCESS, response);
   }
 
+  @Operation(summary = "Logout")
   @GetMapping(value = {AppEndpoint.Auth.LOGOUT})
   public ResponseEntity<?> logout() {
-    return ResponseEntity.ok(
-        DataResponseDto.success(HttpStatus.OK.value(), MessageConst.success("Logout"), null));
+    return EntityResponseDto.success(HttpStatus.OK, MessageConst.success("Logout"), null);
   }
 }

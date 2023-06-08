@@ -1,6 +1,6 @@
 package com.personal.devetblogapi.exception;
 
-import com.personal.devetblogapi.model.DataResponseDto;
+import com.personal.devetblogapi.model.ResponseDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionHandlers {
 
   @ExceptionHandler(CustomException.class)
-  public ResponseEntity<?> handleObjectException(CustomException ex) {
+  public ResponseEntity<?> handleCustomException(CustomException ex) {
     return ResponseEntity.badRequest()
-        .body(
-            DataResponseDto.error(
-                ex.getHttpStatus().value(), ex.getHttpStatus().name(), ex.getError()));
+        .body(ResponseDto.error(ex.getHttpStatus(), ex.getHttpStatus().name(), ex.getError()));
   }
 
   @ExceptionHandler(JwtException.class)

@@ -124,7 +124,7 @@ public class JwtService {
 
       //      objectMapper.writeValue(
       //          response.getWriter(),
-      //          DataResponseDto.error(
+      //          ResponseDto.error(
       //              HttpStatus.UNAUTHORIZED.value(),
       //              HttpStatus.UNAUTHORIZED.name(),
       //              MessageConst.Jwt.INVALID_SIGNATURE));
@@ -134,7 +134,7 @@ public class JwtService {
 
       //      objectMapper.writeValue(
       //          response.getWriter(),
-      //          DataResponseDto.error(
+      //          ResponseDto.error(
       //              HttpStatus.UNAUTHORIZED.value(),
       //              HttpStatus.UNAUTHORIZED.name(),
       //              MessageConst.Jwt.INVALID));
@@ -144,7 +144,7 @@ public class JwtService {
 
       //      objectMapper.writeValue(
       //          response.getWriter(),
-      //          DataResponseDto.error(
+      //          ResponseDto.error(
       //              HttpStatus.UNAUTHORIZED.value(),
       //              HttpStatus.UNAUTHORIZED.name(),
       //              MessageConst.Jwt.EXPIRED));
@@ -154,7 +154,7 @@ public class JwtService {
 
       //      objectMapper.writeValue(
       //          response.getWriter(),
-      //          DataResponseDto.error(
+      //          ResponseDto.error(
       //              HttpStatus.UNAUTHORIZED.value(),
       //              HttpStatus.UNAUTHORIZED.name(),
       //              MessageConst.Jwt.UNSUPPORTED)
@@ -165,7 +165,7 @@ public class JwtService {
 
       //      objectMapper.writeValue(
       //          response.getWriter(),
-      //          DataResponseDto.error(
+      //          ResponseDto.error(
       //              HttpStatus.UNAUTHORIZED.value(),
       //              HttpStatus.UNAUTHORIZED.name(),
       //              MessageConst.Jwt.EMPTY_CLAIMS));

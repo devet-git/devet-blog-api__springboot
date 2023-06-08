@@ -2,7 +2,7 @@ package com.personal.devetblogapi.constant;
 
 public final class AppEndpoint {
 
-  private static final String ROOT_V1 = "/api/v1/";
+  public static final String ROOT_V1 = "/api/v1/";
 
   public static final String[] WHITE_LIST = {
     "/api/v1/auth/**",
@@ -21,8 +21,13 @@ public final class AppEndpoint {
   }
 
   public static final class Article {
-    public static final String BASE = ROOT_V1 + "articles/";
+    private static final String BASE = "articles";
 
-    public static final String get = "/";
+    public static final String listAll = BASE;
+    public static final String LIST_ALL_BY_USER_ID = "/users/{id}/" + BASE;
+    public static final String GET_BY_ID = BASE + "/{id}";
+    public static final String CREATE = BASE;
+    public static final String UPDATE = BASE + "/{id}";
+    public static final String DELETE = BASE + "/{id}";
   }
 }
