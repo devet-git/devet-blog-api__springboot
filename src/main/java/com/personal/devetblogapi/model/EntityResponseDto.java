@@ -33,6 +33,11 @@ public final class EntityResponseDto {
         .body(new Success(new Date(), statusCode.value(), message, data));
   }
 
+  public static ResponseEntity<Object> success(String message, Object data) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(new Success(new Date(), HttpStatus.OK.value(), message, data));
+  }
+
   public static ResponseEntity<Object> error(HttpStatus statusCode, String message, Object errors) {
     return ResponseEntity.status(statusCode)
         .body(new Error(new Date(), statusCode.value(), message, errors));

@@ -42,4 +42,10 @@ public final class AppEndpoint {
     public static final String UPDATE = BASE + "/{id}";
     public static final String DELETE = BASE + "/{id}";
   }
+
+  public static final class File {
+    private static final String BASE = "files";
+    public static final String getAll = BASE;
+    public static final String upload = BASE;
+  }
 }
