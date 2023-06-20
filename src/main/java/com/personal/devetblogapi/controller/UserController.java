@@ -40,7 +40,7 @@ public class UserController {
 
   @PreAuthorize("hasRole('ADMIN')")
   @SwaggerFormat(summary = "List all users(only ADMIN)")
-  @GetMapping(AppEndpoint.User.listAll)
+  @GetMapping(AppEndpoint.User.LIST_ALL)
   public ResponseEntity<?> listAllUsers(
       @RequestParam(defaultValue = "1") int pageNumber,
       @RequestParam(defaultValue = "1") int pageSize,

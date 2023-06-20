@@ -33,6 +33,13 @@ public class FileService {
     return res;
   }
 
+  public FileEntity getFileById(String fileId) {
+    return fileRepo
+        .findById(fileId)
+        .orElseThrow(
+            () -> new CustomException(MessageConst.notExist("File"), HttpStatus.BAD_REQUEST, null));
+  }
+
   public ArrayList<String> uploadMultiFiles(List<MultipartFile> files) throws IOException {
 
     if (files.size() == 0) {
@@ -54,9 +61,11 @@ public class FileService {
 
       // TODO: get file url have been uploaded
       String fileUrl = uploadResult.get("url").toString();
+      String filePublicId = uploadResult.get("public_id").toString();
 
       FileEntity newFile =
           FileEntity.builder()
+              .id(filePublicId)
               .posterId(loggingUser.getId())
               .url(fileUrl)
               .uploadedDate(new Date())
