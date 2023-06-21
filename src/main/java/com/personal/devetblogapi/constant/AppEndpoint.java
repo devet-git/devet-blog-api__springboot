@@ -36,10 +36,19 @@ public final class AppEndpoint {
   public static final class User {
     private static final String BASE = "users";
 
-    public static final String listAll = BASE;
+    public static final String LIST_ALL = BASE;
     public static final String GET_BY_ID = BASE + "/{id}";
     public static final String CREATE = BASE;
     public static final String UPDATE = BASE + "/{id}";
     public static final String DELETE = BASE + "/{id}";
+  }
+
+  public static final class File {
+    private static final String BASE = "files";
+    public static final String GET_ALL = BASE;
+    public static final String GET_BY_ID = BASE + "/{id}";
+    public static final String UPLOAD = BASE;
+    public static final String DELETE_BY_ID = BASE + "/{id}";
+    public static final String DELETE_BY_URL = BASE + "/{url}";
   }
 }

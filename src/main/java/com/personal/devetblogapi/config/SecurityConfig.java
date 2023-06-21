@@ -1,20 +1,24 @@
 package com.personal.devetblogapi.config;
 
 import com.personal.devetblogapi.constant.AppEndpoint;
+import com.personal.devetblogapi.constant.CrossOriginUrls;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +37,8 @@ public class SecurityConfig {
                 .permitAll()
                 .anyRequest()
                 .authenticated());
+
+    http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
     http.logout(
@@ -42,14 +48,23 @@ public class SecurityConfig {
               (req, res, authentication) -> SecurityContextHolder.clearContext());
           logout.permitAll();
         });
-    http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     http.csrf(AbstractHttpConfigurer::disable);
+    http.cors(Customizer.withDefaults());
     //    http.httpBasic(Customizer.withDefaults());
     return http.build();
   }
 
+  //  TODO: Config CORS
   @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-    return (web) -> web.ignoring().requestMatchers(AppEndpoint.PUBLIC_LIST);
+  public CorsFilter corsFilter() {
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.addAllowedOrigin(CrossOriginUrls.WEB_DEV);
+    config.addAllowedHeader("*");
+    config.addAllowedMethod("*");
+    config.setMaxAge(3600L);
+    source.registerCorsConfiguration("/api/**", config);
+    return new CorsFilter(source);
   }
 }
