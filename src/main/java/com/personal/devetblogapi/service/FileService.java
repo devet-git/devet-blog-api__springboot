@@ -6,6 +6,7 @@ import com.personal.devetblogapi.constant.MessageConst;
 import com.personal.devetblogapi.entity.FileEntity;
 import com.personal.devetblogapi.entity.UserEntity;
 import com.personal.devetblogapi.exception.CustomException;
+import com.personal.devetblogapi.model.FileDto;
 import com.personal.devetblogapi.repo.FileRepo;
 import com.personal.devetblogapi.repo.UserRepo;
 import java.io.File;
@@ -29,8 +30,7 @@ public class FileService {
   @Autowired private FileRepo fileRepo;
 
   public List<?> getAllFile() {
-    List<FileEntity> res = fileRepo.findAll();
-    return res;
+    return fileRepo.findAll();
   }
 
   public FileEntity getFileById(String fileId) {
@@ -40,13 +40,21 @@ public class FileService {
             () -> new CustomException(MessageConst.notExist("File"), HttpStatus.BAD_REQUEST, null));
   }
 
-  public ArrayList<String> uploadMultiFiles(List<MultipartFile> files) throws IOException {
+  public FileEntity getFileByUrl(String imgUrl) {
+    return fileRepo
+        .findByUrl(imgUrl)
+        .orElseThrow(
+            () -> new CustomException(MessageConst.notExist("File"), HttpStatus.BAD_REQUEST, null));
+  }
+
+  public ArrayList<FileDto.Response> uploadMultiFiles(List<MultipartFile> files)
+      throws IOException {
 
     if (files.size() == 0) {
       throw new CustomException(MessageConst.notExist("User"), HttpStatus.BAD_REQUEST, null);
     }
 
-    ArrayList<String> uploadedFileUrls = new ArrayList<>();
+    ArrayList<FileDto.Response> uploadedFileUrls = new ArrayList<>();
     ArrayList<FileEntity> storedFilesToDb = new ArrayList<>();
 
     // TODO: get logging user to system
@@ -72,12 +80,23 @@ public class FileService {
               .build();
 
       storedFilesToDb.add(newFile);
-      uploadedFileUrls.add(fileUrl);
+      uploadedFileUrls.add(new FileDto.Response(filePublicId, fileUrl));
       uploadedFile.delete();
     }
     fileRepo.saveAll(storedFilesToDb); // TODO: save to DB
 
     return uploadedFileUrls;
+  }
+
+  public void deleteFileByUrl(String imgUrl) throws IOException {
+    FileEntity fileToDel = getFileByUrl(imgUrl);
+    fileRepo.deleteById(fileToDel.getId());
+    cloudinary.uploader().destroy(fileToDel.getId(), ObjectUtils.emptyMap());
+  }
+
+  public void deleteFileById(String id) throws IOException {
+    fileRepo.deleteById(id);
+    cloudinary.uploader().destroy(id, ObjectUtils.emptyMap());
   }
 
   private File convertMultiPartToFile(MultipartFile file) throws IOException {

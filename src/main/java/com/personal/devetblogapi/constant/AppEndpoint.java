@@ -48,5 +48,7 @@ public final class AppEndpoint {
     public static final String GET_ALL = BASE;
     public static final String GET_BY_ID = BASE + "/{id}";
     public static final String UPLOAD = BASE;
+    public static final String DELETE_BY_ID = BASE + "/{id}";
+    public static final String DELETE_BY_URL = BASE + "/{url}";
   }
 }

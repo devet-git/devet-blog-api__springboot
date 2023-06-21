@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,4 +53,19 @@ public class FileController {
     var imageUrls = fileService.uploadMultiFiles(files);
     return EntityResponseDto.success(HttpStatus.OK, MessageConst.success("Upload file"), imageUrls);
   }
+
+  @SwaggerFormat(summary = "Delete file by id")
+  @DeleteMapping(AppEndpoint.File.DELETE_BY_ID)
+  public ResponseEntity<?> deleteByUrl(@PathVariable("id") String id) throws IOException {
+    fileService.deleteFileById(id);
+    return EntityResponseDto.success(
+        MessageConst.success(String.format("File with id: %s deleted", id)), null);
+  }
+  //  @SwaggerFormat(summary = "Delete file by url")
+  //  @DeleteMapping(AppEndpoint.File.DELETE_BY_URL)
+  //  public ResponseEntity<?> deleteByUrl(String imgUrl) throws IOException {
+  //    fileService.deleteFileByUrl(imgUrl);
+  //    return EntityResponseDto.success(
+  //        MessageConst.success(String.format("File with url: %s deleted", imgUrl)), null);
+  //  }
 }
