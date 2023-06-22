@@ -9,6 +9,7 @@ import com.personal.devetblogapi.model.ArticleDto;
 import com.personal.devetblogapi.model.EntityResponseDto;
 import com.personal.devetblogapi.service.ArticleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +39,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class ArticleController {
   @Autowired private ArticleService articleService;
 
-  @SwaggerFormat(summary = "List all articles")
-  @GetMapping(AppEndpoint.Article.listAll)
+  @PermitAll
+  @SwaggerFormat(
+      summary = "List all articles",
+      security = {})
+  @GetMapping(AppEndpoint.Article.LIST_ALL)
   public ResponseEntity<?> listAllArticles(
       @RequestParam(defaultValue = "1") int pageNumber,
       @RequestParam(defaultValue = "1") int pageSize,
       @RequestParam(defaultValue = "title") String sortBy) {
-    List<ArticleEntity> articles = articleService.getAll(pageNumber, pageSize, sortBy);
+    var response = articleService.getAll(pageNumber, pageSize, sortBy);
     return EntityResponseDto.success(
-        HttpStatus.OK, MessageConst.success("List all articles"), articles);
+        HttpStatus.OK, MessageConst.success("List all articles"), response);
   }
 
   @SwaggerFormat(summary = "List all articles by user id")
@@ -101,5 +105,17 @@ public class ArticleController {
     articleService.deleteOneById(articleId);
     return EntityResponseDto.success(
         HttpStatus.OK, MessageConst.success("Delete article with id: " + articleId), null);
+  }
+
+  @SwaggerFormat(
+      summary = "Search articles",
+      security = {})
+  @GetMapping(AppEndpoint.Article.SEARCH)
+  public ResponseEntity<?> searchWithTitle(
+      @RequestParam(value = "by", required = false) String searchBy,
+      @RequestParam("keyword") String keyword) {
+    var res = articleService.searchWithTitle(keyword);
+    return EntityResponseDto.success(
+        HttpStatus.OK, MessageConst.success("Search article with keyword: " + keyword), res);
   }
 }

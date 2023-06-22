@@ -24,6 +24,8 @@ public final class ArticleDto {
 
     @NotEmpty(message = "Email can't empty")
     private String content;
+
+    private ArrayList<String> images;
   }
 
   @Getter

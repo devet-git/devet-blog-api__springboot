@@ -16,4 +16,6 @@ public interface ArticleRepo extends MongoRepository<ArticleEntity, String> {
   ArticleEntity findByTitle(String title);
 
   List<ArticleEntity> findAllByAuthors(String[] authors);
+
+  List<ArticleEntity> findByTitleIgnoreCaseContaining(String keyword);
 }

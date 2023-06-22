@@ -1,5 +1,6 @@
 package com.personal.devetblogapi.entity;
 
+import com.personal.devetblogapi.model.UserDto;
 import java.util.ArrayList;
 import java.util.Date;
 import lombok.Builder;
@@ -16,7 +17,9 @@ public class ArticleEntity {
   private ArrayList<String> authors;
   private String description;
   private String content;
+  private ArrayList<String> images;
   private String userId;
+  private UserDto.Response poster;
   private Date createdDate;
   private Date updatedDate;
 }
