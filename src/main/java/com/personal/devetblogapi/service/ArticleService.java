@@ -5,12 +5,15 @@ import com.personal.devetblogapi.entity.ArticleEntity;
 import com.personal.devetblogapi.entity.UserEntity;
 import com.personal.devetblogapi.exception.CustomException;
 import com.personal.devetblogapi.model.ArticleDto;
+import com.personal.devetblogapi.model.UserDto;
 import com.personal.devetblogapi.repo.ArticleRepo;
 import com.personal.devetblogapi.util.EntityUtil;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -27,15 +30,21 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
   @Autowired private ArticleRepo articleRepo;
   @Autowired private AuthService authService;
+  @Autowired private ModelMapper modelMapper;
 
   @Cacheable(value = "articles")
-  public List<ArticleEntity> getAll(int pageNumber, int pageSize, String sortBy) {
+  public Object getAll(int pageNumber, int pageSize, String sortBy) {
     if (pageNumber <= 0)
       throw new CustomException(
           "pageNumber value must be 1 and more", HttpStatus.BAD_REQUEST, null);
     Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(sortBy).ascending());
     Page<ArticleEntity> pageResult = articleRepo.findAll(pageable);
-    return pageResult.getContent();
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("totalArticle", articleRepo.count());
+    result.put("articles", pageResult.getContent());
+
+    return result;
   }
 
   @Cacheable(value = "articles", key = "articleByUserId")
@@ -68,8 +77,9 @@ public class ArticleService {
             .authors(req.getAuthors())
             .content(req.getContent())
             .description(req.getDescription())
-            .userId(currentUser.getId())
             .createdDate(new Date())
+            .images(req.getImages())
+            .poster(modelMapper.map(currentUser, UserDto.Response.class))
             .build();
     articleRepo.save(article);
   }
@@ -99,5 +109,9 @@ public class ArticleService {
   @CacheEvict(value = "product", key = "#articleId")
   public void deleteOneById(String articleId) {
     articleRepo.deleteById(articleId);
+  }
+
+  public List<ArticleEntity> searchWithTitle(String keyword) {
+    return articleRepo.findByTitleIgnoreCaseContaining(keyword);
   }
 }
