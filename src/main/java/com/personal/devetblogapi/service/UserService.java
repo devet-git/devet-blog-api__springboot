@@ -69,7 +69,7 @@ public class UserService {
             .email(reqEmail)
             .password(passwordEncoder.encode(reqPw))
             .role(UserRole.USER)
-            .create_date(new Date())
+            .createDate(new Date())
             .build();
 
     userRepo.save(user);
@@ -82,14 +82,14 @@ public class UserService {
     updatedUser.setUsername(req.getUsername());
     updatedUser.setFullName(req.getFullName());
     updatedUser.setEmail(req.getEmail());
-    updatedUser.setUpdate_date(new Date());
+    updatedUser.setUpdateDate(new Date());
     userRepo.save(updatedUser);
   }
 
   public <T> void updateById(String userId, Map<String, T> fields) {
     UserEntity updatedUser = getById(userId);
     EntityUtil.partialUpdate(updatedUser, fields);
-    updatedUser.setUpdate_date(new Date());
+    updatedUser.setUpdateDate(new Date());
     userRepo.save(updatedUser);
   }
 

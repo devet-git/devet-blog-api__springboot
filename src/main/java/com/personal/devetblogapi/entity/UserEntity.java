@@ -31,9 +31,9 @@ public class UserEntity implements UserDetails {
   private String password;
 
   private UserRole role;
-
-  private Date create_date;
-  private Date update_date;
+  private String avatarUrl;
+  private Date createDate;
+  private Date updateDate;
   //  @DBRef private List<TokenEntity> tokens;
 
   @Override

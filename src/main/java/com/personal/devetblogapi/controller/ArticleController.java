@@ -10,7 +10,6 @@ import com.personal.devetblogapi.model.EntityResponseDto;
 import com.personal.devetblogapi.service.ArticleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,22 +47,24 @@ public class ArticleController {
       @RequestParam(defaultValue = "1") int pageNumber,
       @RequestParam(defaultValue = "1") int pageSize,
       @RequestParam(defaultValue = "title") String sortBy) {
+
     var response = articleService.getAll(pageNumber, pageSize, sortBy);
+
     return EntityResponseDto.success(
         HttpStatus.OK, MessageConst.success("List all articles"), response);
   }
 
-  @SwaggerFormat(summary = "List all articles by user id")
+  @SwaggerFormat(
+      summary = "List all articles by user id",
+      security = {})
   @GetMapping(AppEndpoint.Article.LIST_ALL_BY_USER_ID)
   public ResponseEntity<?> listAllArticlesByUserId(
       @PathVariable("id") String userId,
       @RequestParam(defaultValue = "1") int pageNumber,
       @RequestParam(defaultValue = "1") int pageSize,
       @RequestParam(defaultValue = "title") String sortBy) {
-    List<ArticleEntity> articles =
-        articleService.getAllByUserId(userId, pageNumber, pageSize, sortBy);
-    return EntityResponseDto.success(
-        HttpStatus.OK, MessageConst.success("List articles"), articles);
+    var res = articleService.getAllByUserId(userId, pageNumber, pageSize, sortBy);
+    return EntityResponseDto.success(HttpStatus.OK, MessageConst.success("List articles"), res);
   }
 
   @SwaggerFormat(summary = "Get articles by id")

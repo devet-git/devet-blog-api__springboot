@@ -4,7 +4,7 @@ public final class AppEndpoint {
 
   public static final String ROOT_V1 = "/api/v1/";
   public static final String[] PUBLIC_LIST_GET = {
-    "/api/v1/articles", "/api/v1/articles/**",
+    "/api/v1/articles", "/api/v1/articles/**", "/api/v1/users/*/articles"
   };
   public static final String[] PUBLIC_LIST = {
     "/api/v1/auth/**",

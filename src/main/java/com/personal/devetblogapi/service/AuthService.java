@@ -6,10 +6,12 @@ import com.personal.devetblogapi.entity.TokenEntity;
 import com.personal.devetblogapi.entity.UserEntity;
 import com.personal.devetblogapi.exception.CustomException;
 import com.personal.devetblogapi.model.AuthDto;
+import com.personal.devetblogapi.model.UserDto;
 import com.personal.devetblogapi.repo.TokenRepo;
 import com.personal.devetblogapi.repo.UserRepo;
 import java.util.Date;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +28,7 @@ public class AuthService {
   @Autowired private final UserRepo userRepo;
   @Autowired private final TokenRepo tokenRepo;
   @Autowired private final JwtService jwtService;
+  @Autowired private ModelMapper modelMapper;
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
 
@@ -57,18 +60,21 @@ public class AuthService {
             .email(reqEmail)
             .password(passwordEncoder.encode(reqPw))
             .role(UserRole.USER)
-            .create_date(new Date())
+            .createDate(new Date())
             .build();
 
     UserEntity savedUser = userRepo.save(user);
     String jwtToken = jwtService.generateToken(user);
     saveUserToken(savedUser, jwtToken);
 
-    return AuthDto.Response.builder().token(jwtToken).userId(savedUser.getId()).build();
+    return AuthDto.Response.builder()
+        .token(jwtToken)
+        .user(modelMapper.map(savedUser, UserDto.Response.class))
+        .build();
   }
 
   /**
-   * Authentication serivce
+   * Authentication service
    *
    * @param req the login request body
    * @return the jwt token
@@ -90,7 +96,10 @@ public class AuthService {
     revokedAllUserToken(user);
     saveUserToken(user, jwtToken);
 
-    return AuthDto.Response.builder().token(jwtToken).userId(user.getId()).build();
+    return AuthDto.Response.builder()
+        .token(jwtToken)
+        .user(modelMapper.map(user, UserDto.Response.class))
+        .build();
   }
 
   private void saveUserToken(UserEntity user, String jwtToken) {
