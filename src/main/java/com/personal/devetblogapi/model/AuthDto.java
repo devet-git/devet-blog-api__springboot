@@ -62,6 +62,6 @@ public final class AuthDto {
   @Builder
   public static final class Response {
     private String token;
-    private String userId;
+    private UserDto.Response user;
   }
 }

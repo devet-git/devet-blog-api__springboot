@@ -41,21 +41,41 @@ public class ArticleService {
     Page<ArticleEntity> pageResult = articleRepo.findAll(pageable);
 
     Map<String, Object> result = new HashMap<>();
-    result.put("totalArticle", articleRepo.count());
+    result.put("totalArticle", pageResult.getTotalElements());
     result.put("articles", pageResult.getContent());
 
     return result;
   }
 
   @Cacheable(value = "articles", key = "articleByUserId")
-  public List<ArticleEntity> getAllByUserId(
-      String userId, int pageNumber, int pageSize, String sortBy) {
+  public Object getAllByUserId(String userId, int pageNumber, int pageSize, String sortBy) {
     if (pageNumber <= 0)
       throw new CustomException(
           "pageNumber value must be 1 and more", HttpStatus.BAD_REQUEST, null);
     Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(sortBy).ascending());
     Page<ArticleEntity> pageResult = articleRepo.findAllByUserId(userId, pageable);
-    return pageResult.getContent();
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("totalArticle", pageResult.getTotalElements());
+    result.put("articles", pageResult.getContent());
+
+    return result;
+  }
+
+  @Cacheable(value = "articles", key = "articleForLoggingUser")
+  public Object getAllForLoggingUser(int pageNumber, int pageSize, String sortBy) {
+    if (pageNumber <= 0)
+      throw new CustomException(
+          "pageNumber value must be 1 and more", HttpStatus.BAD_REQUEST, null);
+    Pageable pageable = PageRequest.of(pageNumber - 1, pageSize, Sort.by(sortBy).ascending());
+    UserEntity loggingUser = authService.getCurrentUser();
+    Page<ArticleEntity> pageResult = articleRepo.findAllByUserId(loggingUser.getId(), pageable);
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("totalArticle", pageResult.getTotalElements());
+    result.put("articles", pageResult.getContent());
+
+    return result;
   }
 
   @Cacheable(value = "article", key = "#id")
@@ -79,6 +99,7 @@ public class ArticleService {
             .description(req.getDescription())
             .createdDate(new Date())
             .images(req.getImages())
+            .userId(currentUser.getId())
             .poster(modelMapper.map(currentUser, UserDto.Response.class))
             .build();
     articleRepo.save(article);
