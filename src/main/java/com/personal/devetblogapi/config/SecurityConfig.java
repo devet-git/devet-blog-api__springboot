@@ -64,6 +64,7 @@ public class SecurityConfig {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
     config.addAllowedOrigin(CrossOriginUrls.WEB_DEV);
+    config.addAllowedOrigin(CrossOriginUrls.WEB_PROD);
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
     config.setMaxAge(3600L);
